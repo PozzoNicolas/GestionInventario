@@ -94,4 +94,9 @@ public class RepositorioProductoImpl implements RepositorioProducto {
         return sf.getCurrentSession().createQuery(query).getResultList();
     }
 
+    @Override
+    public void modificarProducto(Producto producto) {
+        sf.getCurrentSession().update(producto);
+    }
+
 }

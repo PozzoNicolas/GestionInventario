@@ -11,5 +11,5 @@ List <Producto> listarProductosPorCategoria (CategoriaProducto categoria);
 List <Producto> listarTodosLosProductos ();
 List <Producto> listarProductosConStockMenorA (Integer limite);
 List <Producto> listarProductosPorNombre (String nombre);
-
+void modificarProducto (Producto producto);
 }

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tallerwebi.dominio.excepcion.ProductoExistente;
+import com.tallerwebi.dominio.excepcion.ProductoNoEncontrado;
+import com.tallerwebi.dominio.excepcion.StockInvalido;
 
 @Service
 @Transactional
@@ -32,38 +34,70 @@ public class ServicioProductoImpl implements ServicioProducto {
 
     @Override
     public void eliminarProducto(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'eliminarProducto'");
+        repositorio.eliminarProducto(id);
     }
 
     @Override
     public Producto buscarProductoPorSku(String sku) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'buscarProductoPorSku'");
+        return repositorio.buscarProductoPorSku(sku);
     }
 
     @Override
     public void descontarStock(Long id, Integer unidadesADescontar) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'descontarStock'");
+        
+        Producto producto = repositorio.buscarProductoPorId(id);
+        if(producto == null){
+            throw new ProductoNoEncontrado("Producto no encontrado.");
+        }
+
+        if(producto.getStockActual() < unidadesADescontar){
+            throw new StockInvalido("Error: No es posible eliminar mas unidades de las que existenten. Unidades en stock: " + producto.getStockActual());
+        }
+
+        producto.setStockActual(producto.getStockActual() - unidadesADescontar);
+        repositorio.modificarProducto(producto);
     }
 
     @Override
     public void aumentarStock(Long id, Integer unidadesASumar) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'aumentarStock'");
+        
+        Producto producto = repositorio.buscarProductoPorId(id);
+        if (producto == null) {
+            throw new ProductoNoEncontrado("Producto no encontrado.");
+        }
+
+        if(unidadesASumar <= 0){
+            throw new StockInvalido("No se pueden sumar unidades negativas");
+        }
+
+        producto.setStockActual(producto.getStockActual()+unidadesASumar);
+        repositorio.modificarProducto(producto);
     }
 
     @Override
     public List<Producto> buscarProductosConStockBajo(Integer stockAlerta) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'buscarProductosConStockBajo'");
+
+        if(stockAlerta < 0){
+            throw new StockInvalido("No es posible buscar productos con stock en negativo.");
+        }
+
+        List<Producto> productos = repositorio.listarProductosConStockMenorA(stockAlerta);
+        return productos;
     }
 
     @Override
     public void modificarPrecio(Long id, Double precioNuevo) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'modificarPrecio'");
+        
+        Producto producto = repositorio.buscarProductoPorId(id);
+        if(producto == null){
+            throw new ProductoNoEncontrado("Producto no encontrado.");
+        }
+        if(precioNuevo <= 0){
+            throw new IllegalArgumentException("El precio del producto debe ser positivo"); 
+        }
+
+        producto.setPrecio(precioNuevo);
+        repositorio.modificarProducto(producto);
     }
 
 }

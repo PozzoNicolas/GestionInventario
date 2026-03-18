@@ -99,4 +99,9 @@ public class RepositorioProductoImpl implements RepositorioProducto {
         sf.getCurrentSession().update(producto);
     }
 
+    @Override
+    public Producto buscarProductoPorId(Long id) {
+        return sf.getCurrentSession().find(Producto.class, id);
+    }
+
 }

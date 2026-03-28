@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Taller Web I</title>
+
+    <!-- Boostrap core css -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}" />
+
+    <!-- custom style -->
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+
+</head>
+
+<body>
+    <form th:action="@{/guardar-producto}" th:object="${producto}" method="post">
+
+        <div class="form-group">
+            <label>SKU del Producto</label>
+            <input type="text" th:field="*{sku}" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Nombre del Producto</label>
+            <input type="text" th:field="*{nombre}" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Categoría del Producto</label>
+            <select name="idCategoria" class="form-control">
+                <option value="">Seleccione una categoría...</option>
+                <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nombre}">
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Precio</label>
+            <input type="number" th:field="*{precio}" class="form-control" />
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <button type="submit" class="btn btn-success">Guardar Producto</button>
+    </form>
+
+
+</body>
+
+</html>

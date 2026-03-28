@@ -13,4 +13,6 @@ List <Producto> listarTodosLosProductos ();
 List <Producto> listarProductosConStockMenorA (Integer limite);
 List <Producto> listarProductosPorNombre (String nombre);
 void modificarProducto (Producto producto);
+List<CategoriaProducto> listarTodasLasCategorias();
+CategoriaProducto buscarCategoriaPorId(Long idCategoria);
 }

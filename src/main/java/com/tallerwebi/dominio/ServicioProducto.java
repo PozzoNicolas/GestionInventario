@@ -12,4 +12,6 @@ void aumentarStock (Long id, Integer unidadesASumar);
 List<Producto> buscarProductosConStockBajo(Integer stockAlerta);
 void modificarPrecio(Long id, Double precioNuevo);
 List<Producto> listarTodos();
+List<CategoriaProducto> listarCategorias();
+CategoriaProducto buscarCategoriaPorId(Long idCategoria);
 }

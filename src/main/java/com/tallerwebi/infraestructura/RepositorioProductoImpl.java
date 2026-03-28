@@ -104,4 +104,16 @@ public class RepositorioProductoImpl implements RepositorioProducto {
         return sf.getCurrentSession().find(Producto.class, id);
     }
 
+    @Override
+    public List<CategoriaProducto> listarTodasLasCategorias() {
+       return sf.getCurrentSession()
+            .createQuery("FROM CategoriaProducto", CategoriaProducto.class)
+            .getResultList();
+    }
+
+    @Override
+    public CategoriaProducto buscarCategoriaPorId(Long idCategoria) {
+        return sf.getCurrentSession().get(CategoriaProducto.class, idCategoria);
+    }
+
 }

@@ -18,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.tallerwebi.dominio.CategoriaProducto;
 import com.tallerwebi.dominio.Producto;
 import com.tallerwebi.dominio.ServicioProducto;
 import com.tallerwebi.dominio.excepcion.ProductoExistente;
@@ -54,20 +55,22 @@ public class ControladorProductoTest {
     public void queAlGuardarUnProductoExitosamenteRedirijaALaLista(){
 
         Producto producto = new Producto();
+        CategoriaProducto categoria = new CategoriaProducto();
 
-        ModelAndView mav = controladorProducto.guardarProducto(producto);
+        ModelAndView mav = controladorProducto.guardarProducto(producto, categoria.getId());
         assertThat(mav.getViewName(), is("redirect:/productos"));
         verify(servicioProductoMock, times(1)).agregarNuevoProducto(producto);
     }
 
-    @Test
+     @Test
     public void queAlGuardarProductoExistenteMeDevuelvaAlFormularioConError(){
 
         Producto producto = new Producto();
+        CategoriaProducto categoria = new CategoriaProducto();
 
         doThrow(ProductoExistente.class).when(servicioProductoMock).agregarNuevoProducto(any());
 
-        ModelAndView mav = controladorProducto.guardarProducto(producto);
+        ModelAndView mav = controladorProducto.guardarProducto(producto, categoria.getId());
 
         assertThat(mav.getViewName(), is("formulario-producto"));
         assertThat(mav.getModel().get("error"), is("El SKU ya existe en el sistema."));

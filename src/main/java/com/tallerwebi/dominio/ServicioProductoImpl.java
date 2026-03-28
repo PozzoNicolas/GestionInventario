@@ -105,4 +105,14 @@ public class ServicioProductoImpl implements ServicioProducto {
         return repositorio.listarTodosLosProductos();
     }
 
+    @Override
+    public List<CategoriaProducto> listarCategorias() {
+       return repositorio.listarTodasLasCategorias();
+    }
+
+    @Override
+    public CategoriaProducto buscarCategoriaPorId(Long idCategoria) {
+        return repositorio.buscarCategoriaPorId(idCategoria);
+    }
+
 }

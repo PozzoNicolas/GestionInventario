@@ -11,5 +11,5 @@ void descontarStock (Long id, Integer unidadesADescontar);
 void aumentarStock (Long id, Integer unidadesASumar);
 List<Producto> buscarProductosConStockBajo(Integer stockAlerta);
 void modificarPrecio(Long id, Double precioNuevo);
-
+List<Producto> listarTodos();
 }

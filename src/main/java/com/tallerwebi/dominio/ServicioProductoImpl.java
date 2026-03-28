@@ -100,4 +100,9 @@ public class ServicioProductoImpl implements ServicioProducto {
         repositorio.modificarProducto(producto);
     }
 
+    @Override
+    public List<Producto> listarTodos() {
+        return repositorio.listarTodosLosProductos();
+    }
+
 }

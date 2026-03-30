@@ -27,7 +27,7 @@ public class RepositorioProductoImpl implements RepositorioProducto {
 
     @Override
     public void agregarProducto(Producto producto) {
-        sf.getCurrentSession().save(producto);
+        sf.getCurrentSession().merge(producto);
     }
 
     @Override

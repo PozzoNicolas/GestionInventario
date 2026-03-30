@@ -14,4 +14,6 @@ void modificarPrecio(Long id, Double precioNuevo);
 List<Producto> listarTodos();
 List<CategoriaProducto> listarCategorias();
 CategoriaProducto buscarCategoriaPorId(Long idCategoria);
+Producto buscarProductoPorId(Long id);
+void modificarProducto(Producto producto);
 }

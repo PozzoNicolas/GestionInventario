@@ -115,4 +115,20 @@ public class ServicioProductoImpl implements ServicioProducto {
         return repositorio.buscarCategoriaPorId(idCategoria);
     }
 
+    @Override
+    public Producto buscarProductoPorId(Long id) {
+        return repositorio.buscarProductoPorId(id);
+    }
+
+    @Override
+    public void modificarProducto(Producto producto) {
+    Producto productoExistente = repositorio.buscarProductoPorId(producto.getId());
+    if (!productoExistente.getSku().equals(producto.getSku())) {
+        if (repositorio.buscarProductoPorSku(producto.getSku()) != null) {
+            throw new ProductoExistente("");
+        }
+    }
+    repositorio.agregarProducto(producto);
+    }
+
 }

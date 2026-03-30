@@ -30,8 +30,9 @@ public class HibernateConfig {
         if (dbUser == null) dbUser = "user";
         if (dbPassword == null) dbPassword = "user";
         
-        String url = String.format("jdbc:mysql://%s:%s/%s?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true", 
-                                 dbHost, dbPort, dbName);
+
+        String url = String.format("jdbc:mysql://%s:%s/%s?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8", 
+                            dbHost, dbPort, dbName);                         
         
         dataSource.setUrl(url);
         dataSource.setUsername(dbUser);
@@ -60,8 +61,8 @@ public class HibernateConfig {
         properties.setProperty("hibernate.show_sql", "true");
         properties.setProperty("hibernate.format_sql", "true");
         properties.setProperty("hibernate.hbm2ddl.auto", "create");
-        properties.setProperty("hibernate.connection.characterEncoding", "utf8");
-        properties.setProperty("hibernate.connection.CharSet", "utf8");
+        properties.setProperty("hibernate.connection.characterEncoding", "UTF-8");
+        properties.setProperty("hibernate.connection.CharSet", "UTF-8");
         properties.setProperty("hibernate.connection.useUnicode", "true");
         return properties;
     }

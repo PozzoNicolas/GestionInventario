@@ -27,7 +27,8 @@
                     </div>
 
                     <div class="card-body p-4">
-                        <form th:action="@{/guardar-producto}" th:object="${producto}" method="post">
+                        <form th:action="@{/guardar-producto}" th:object="${producto}" method="post"
+                            enctype="multipart/form-data">
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
@@ -63,6 +64,15 @@
                                             placeholder="0.00" required />
                                     </div>
                                 </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label fw-bold text-muted">Imagen del Producto</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-image"></i></span>
+                                    <input type="file" name="archivoImagen" class="form-control" accept="image/*">
+                                </div>
+                                <small class="text-muted">Formatos sugeridos: JPG, PNG. Máx 2MB.</small>
                             </div>
 
                             <div th:if="${error}" class="alert alert-danger d-flex align-items-center shadow-sm"

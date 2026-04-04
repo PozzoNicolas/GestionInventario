@@ -41,6 +41,13 @@
                 <td th:text="${'$ ' + p.precio}">$0.00</td>
                 <td th:text="${p.stockActual}" th:classappend="${p.stockActual < 5} ? 'text-danger' : ''">0</td>
                 <td th:text="${p.categoria != null ? p.categoria.nombre : 'Sin Categoría'}">Caja</td>
+                <td th:if="${p?.imagen != null}">
+                    <img th:src="@{/img/{nombre}(nombre=${p.imagen})}"
+                        style="width: 50px; height: 50px; object-fit: cover;" class="rounded shadow-sm">
+                </td>
+                <td th:unless="${p?.imagen != null}">
+                    <span class="text-muted small">Sin foto</span>
+                </td>
                 <td>
                     <a th:href="@{/preparar-edicion/{id}(id=${p.id})}" class="btn btn-warning">Editar</a>
                 </td>

@@ -1,5 +1,7 @@
 package com.tallerwebi.dominio;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,7 +33,7 @@ public class Producto {
     private Integer stockActual;
     private Integer stockMinimo;
     
-    private String urlImagen;
+    private String imagen;
 
     public Producto() {}
 
@@ -91,12 +93,25 @@ public class Producto {
         this.stockMinimo = stockMinimo;
     }
 
-    public String getUrlImagen() {
-        return urlImagen;
+    public String getImagen() {
+        return imagen;
     }
 
-    public void setUrlImagen(String urlImagen) {
-        this.urlImagen = urlImagen;
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+       if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Producto producto = (Producto) o;
+    return Objects.equals(id, producto.id);
     };
 
     

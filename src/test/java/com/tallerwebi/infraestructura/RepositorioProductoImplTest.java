@@ -11,6 +11,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.isNotNull;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -52,8 +53,14 @@ public class RepositorioProductoImplTest {
         p.setPrecio(100.0);
 
         repositorioProducto.agregarProducto(p);
+
+        sf.getCurrentSession().flush();
+
+        // Ahora p.getId() ya NO debería ser null
+        assertThat(p.getId(), is(notNullValue()));
+
         Producto buscado = sf.getCurrentSession().get(Producto.class, p.getId());
-        
+
         assertThat(buscado, is(notNullValue()));
         assertThat(buscado.getSku(), equalTo("9242"));
         assertThat(buscado.getCategoria().getNombre(), equalTo("Cajas"));
@@ -75,7 +82,7 @@ public class RepositorioProductoImplTest {
         repositorioProducto.agregarProducto(p);
         repositorioProducto.eliminarProducto(p.getId());
         Producto buscado = sf.getCurrentSession().get(Producto.class, p.getId());
-        
+
         assertThat(buscado, is(nullValue()));
     }
 
@@ -95,7 +102,7 @@ public class RepositorioProductoImplTest {
         repositorioProducto.agregarProducto(p);
 
         Producto buscado = repositorioProducto.buscarProductoPorSku("9242");
-        
+
         assertThat(buscado, is(notNullValue()));
         assertThat(buscado.getSku(), equalTo("9242"));
         assertThat(buscado.getNombre(), equalTo("ColBox"));
@@ -139,14 +146,14 @@ public class RepositorioProductoImplTest {
         repositorioProducto.agregarProducto(p3);
 
         List<Producto> filtrados = repositorioProducto.listarProductosPorCategoria(categoria1);
-        
+
         assertThat(filtrados, hasSize(2));
         assertThat(filtrados, containsInAnyOrder(p, p3));
         assertThat(filtrados.get(0).getNombre(), equalToIgnoringCase("colbox"));
     }
 
     @Test
-    public void poderListarTodosLosProductos(){
+    public void poderListarTodosLosProductos() {
         CategoriaProducto categoria = new CategoriaProducto();
         categoria.setNombre("Cajas");
         sf.getCurrentSession().save(categoria);
@@ -168,11 +175,15 @@ public class RepositorioProductoImplTest {
         List<Producto> buscados = repositorioProducto.listarTodosLosProductos();
 
         assertThat(buscados, hasSize(2));
-        assertThat(buscados, containsInAnyOrder(p, p2));
+
+        // Extraemos los SKUs de la lista para comparar valores y no instancias de
+        // memoria
+        List<String> skus = buscados.stream().map(Producto::getSku).collect(Collectors.toList());
+        assertThat(skus, containsInAnyOrder("9242", "70"));
     }
 
     @Test
-    public void quePuedaListarProductosConStockIgualOMenorAUnNumeroAsignado(){
+    public void quePuedaListarProductosConStockIgualOMenorAUnNumeroAsignado() {
 
         CategoriaProducto categoria = new CategoriaProducto();
         categoria.setNombre("Cajas");
@@ -208,7 +219,7 @@ public class RepositorioProductoImplTest {
     }
 
     @Test
-    public void queSePuedaListarProductosPorCoincidenciaEnElNombre(){
+    public void queSePuedaListarProductosPorCoincidenciaEnElNombre() {
 
         CategoriaProducto categoria = new CategoriaProducto();
         categoria.setNombre("Cajas");
@@ -219,7 +230,7 @@ public class RepositorioProductoImplTest {
         p.setNombre("ColBox");
         p.setCategoria(categoria);
         p.setPrecio(100.0);
-    
+
         Producto p2 = new Producto();
         p2.setSku("70");
         p2.setNombre("Contenedor ultra");
@@ -234,6 +245,5 @@ public class RepositorioProductoImplTest {
         assertThat(filtrados, hasSize(2));
         assertThat(filtrados, containsInAnyOrder(p, p2));
     }
-
 
 }

@@ -27,7 +27,12 @@ public class RepositorioProductoImpl implements RepositorioProducto {
 
     @Override
     public void agregarProducto(Producto producto) {
-        sf.getCurrentSession().merge(producto);
+        // Capturamos la instancia que devuelve merge
+    Producto guardado = (Producto) sf.getCurrentSession().merge(producto);
+    
+    // IMPORTANTE PARA EL TEST:
+    // Le pasamos el ID del objeto guardado al objeto original
+    producto.setId(guardado.getId());
     }
 
     @Override

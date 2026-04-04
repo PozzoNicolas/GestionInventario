@@ -72,7 +72,7 @@ public class ControladorProducto {
 @RequestMapping(path = "/guardar-producto", method = RequestMethod.POST)
 public ModelAndView guardarProducto(@ModelAttribute("producto") Producto producto,
                                     @RequestParam("idCategoria") Long idCategoria,
-                                    @RequestParam("archivoImagen") MultipartFile archivo,
+                                    @RequestParam( value = "archivoImagen", required = false) MultipartFile archivo,
                                     HttpServletRequest request) {
     ModelMap modelo = new ModelMap();
 

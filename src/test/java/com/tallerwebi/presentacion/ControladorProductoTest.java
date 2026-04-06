@@ -49,7 +49,7 @@ public class ControladorProductoTest {
 
         when(servicioProductoMock.listarTodos()).thenReturn(lista);
 
-        ModelAndView mav = controladorProducto.verProductos();
+        ModelAndView mav = controladorProducto.listarProductos(null);
 
         assertThat(mav.getViewName(), is("lista-productos"));
         assertThat(mav.getModel().get("productos"), is(notNullValue()));
@@ -76,7 +76,8 @@ public class ControladorProductoTest {
         when(requestMock.getServletContext()).thenReturn(contextMock);
         when(contextMock.getRealPath(anyString())).thenReturn("/ruta/falsa/");
 
-        ModelAndView mav = controladorProducto.guardarProducto(producto, idCategoria, archivoMock, requestMock);        assertThat(mav.getViewName(), is("redirect:/productos"));
+        ModelAndView mav = controladorProducto.guardarProducto(producto, idCategoria, archivoMock, requestMock);        
+        assertThat(mav.getViewName(), is("redirect:/productos"));
         assertThat(mav.getViewName(), is("redirect:/productos"));
         verify(servicioProductoMock, times(1)).agregarNuevoProducto(producto);
     }
@@ -86,13 +87,21 @@ public class ControladorProductoTest {
 
         Producto producto = new Producto();
         CategoriaProducto categoria = new CategoriaProducto();
+        MultipartFile archivoMock = new MockMultipartFile("archivoImagen", "", "image/jpeg", new byte[0]);
+        // Simulamos el HttpServletRequest
+        HttpServletRequest requestMock = mock(HttpServletRequest.class);
+        HttpSession sessionMock = mock(HttpSession.class);
+        ServletContext contextMock = mock(ServletContext.class);
+        // Configuramos el encadenamiento del request para que no de NullPointerException al buscar la ruta
+        when(requestMock.getServletContext()).thenReturn(contextMock);
+        when(contextMock.getRealPath(anyString())).thenReturn("/ruta/falsa/");
 
         doThrow(ProductoExistente.class).when(servicioProductoMock).agregarNuevoProducto(any());
 
-        //ModelAndView mav = controladorProducto.guardarProducto(producto, categoria.getId());
+        ModelAndView mav = controladorProducto.guardarProducto(producto, categoria.getId(), archivoMock,requestMock);
 
-       // assertThat(mav.getViewName(), is("formulario-producto"));
-        //assertThat(mav.getModel().get("error"), is("El SKU ya existe en el sistema."));
+        assertThat(mav.getViewName(), is("formulario-producto"));
+        assertThat(mav.getModel().get("error"), is("El SKU ya existe en el sistema."));
     }
 
 

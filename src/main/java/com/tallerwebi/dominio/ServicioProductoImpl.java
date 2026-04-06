@@ -131,4 +131,10 @@ public class ServicioProductoImpl implements ServicioProducto {
     repositorio.agregarProducto(producto);
     }
 
+    @Override
+    public List<Producto> listarPorCategoria(Long idCategoria) {
+        CategoriaProducto categoria = repositorio.buscarCategoriaPorId(idCategoria);
+        return repositorio.listarProductosPorCategoria(categoria);
+    }
+
 }

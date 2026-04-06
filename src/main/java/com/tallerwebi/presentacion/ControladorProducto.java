@@ -36,27 +36,6 @@ public class ControladorProducto {
         this.servicioProducto = servicioProducto;
     }
 
-    @RequestMapping(path = "/productos", method = RequestMethod.GET)
-    public ModelAndView verProductos() {
-
-        ModelMap modelo = new ModelMap();
-
-        // 1. La lista para la tabla
-        List<Producto> lista = servicioProducto.listarTodos();
-        modelo.put("productos", lista);
-
-        // 2. EL TRUCO: Mandamos un objeto vacío para que el modal no explote
-        modelo.put("producto", new Producto());
-
-        // 3. Las categorías para que el select del modal tenga opciones
-        modelo.put("categorias", servicioProducto.listarCategorias());
-
-        // 4. El flag en false (por las dudas)
-        modelo.put("abrirModal", false);
-
-        return new ModelAndView("lista-productos", modelo);
-    }
-
     // 2. Ir al formulario de "Nuevo Producto"
     @RequestMapping(path = "/nuevo-producto", method = RequestMethod.GET)
     public ModelAndView irANuevoProducto() {
@@ -167,6 +146,28 @@ public class ControladorProducto {
         servicioProducto.eliminarProducto(id);
         return new ModelAndView("redirect:/productos");
 
+    }
+
+    @RequestMapping(path = "/productos", method = RequestMethod.GET)
+    public ModelAndView listarProductos(@RequestParam(value = "idCategoria", required = false) Long idCategoria) {
+
+        ModelMap modelo = new ModelMap();
+        List<Producto> lista;
+        
+        if (idCategoria != null) {
+            lista = servicioProducto.listarPorCategoria(idCategoria);
+            // Guardamos el ID (no la lista) para que el select sepa cuál quedó marcado
+            modelo.put("idCategoriaSeleccionada", idCategoria);
+        } else {
+            lista = servicioProducto.listarTodos();
+        }
+        // 2. Cargamos los datos necesarios para la tabla
+        modelo.put("productos", lista);
+        // 3. Mantenemos tus "Trucos" para los modales de Crear/Editar
+        modelo.put("producto", new Producto()); // Objeto vacío para el form
+        modelo.put("categorias", servicioProducto.listarCategorias()); // Para todos los selects
+        modelo.put("abrirModal", false); // Flag de control
+        return new ModelAndView("lista-productos", modelo);
     }
 
 }

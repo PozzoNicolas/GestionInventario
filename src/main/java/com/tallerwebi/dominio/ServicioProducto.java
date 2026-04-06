@@ -16,4 +16,5 @@ List<CategoriaProducto> listarCategorias();
 CategoriaProducto buscarCategoriaPorId(Long idCategoria);
 Producto buscarProductoPorId(Long id);
 void modificarProducto(Producto producto);
+List<Producto> listarPorCategoria (Long idCategoria);
 }

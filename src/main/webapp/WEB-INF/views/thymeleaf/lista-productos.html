@@ -23,6 +23,29 @@
             <i class="fas fa-plus me-2"></i> Nuevo Producto
         </a>
     </div>
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <form th:action="@{/productos}" method="GET" class="row g-3 align-items-center">
+                <div class="col-auto">
+                    <label class="form-label fw-bold">Filtrar por Categoría:</label>
+                </div>
+                <div class="col-md-4">
+                    <select name="idCategoria" class="form-select">
+                        <option value="">Todas las categorías</option>
+                        <option th:each="c : ${categorias}" th:value="${c.id}" th:text="${c.nombre}"
+                            th:selected="${idCategoriaSeleccionada == c.id}">
+                        </option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search"></i> Filtrar
+                    </button>
+                    <a th:href="@{/productos}" class="btn btn-outline-secondary">Limpiar</a>
+                </div>
+            </form>
+        </div>
+    </div>
     <table class="table table-hover align-middle shadow-sm bg-white rounded-3 overflow-hidden">
         <thead class="table-light">
             <tr>
@@ -95,7 +118,8 @@
                                 </div>
                                 <div class="modal-body">
                                     <p>¿Estás seguro de que querés eliminar el producto
-                                        <strong>[[${p.nombre}]]</strong>?</p>
+                                        <strong>[[${p.nombre}]]</strong>?
+                                    </p>
                                     <p class="text-muted small">Esta acción no se puede deshacer.</p>
                                 </div>
                                 <div class="modal-footer">

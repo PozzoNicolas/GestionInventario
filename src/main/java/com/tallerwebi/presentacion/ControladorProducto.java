@@ -40,21 +40,21 @@ public class ControladorProducto {
     public ModelAndView verProductos() {
 
         ModelMap modelo = new ModelMap();
-    
-    // 1. La lista para la tabla
-    List<Producto> lista = servicioProducto.listarTodos();
-    modelo.put("productos", lista);
-    
-    // 2. EL TRUCO: Mandamos un objeto vacío para que el modal no explote
-    modelo.put("producto", new Producto()); 
-    
-    // 3. Las categorías para que el select del modal tenga opciones
-    modelo.put("categorias", servicioProducto.listarCategorias());
-    
-    // 4. El flag en false (por las dudas)
-    modelo.put("abrirModal", false);
 
-    return new ModelAndView("lista-productos", modelo);
+        // 1. La lista para la tabla
+        List<Producto> lista = servicioProducto.listarTodos();
+        modelo.put("productos", lista);
+
+        // 2. EL TRUCO: Mandamos un objeto vacío para que el modal no explote
+        modelo.put("producto", new Producto());
+
+        // 3. Las categorías para que el select del modal tenga opciones
+        modelo.put("categorias", servicioProducto.listarCategorias());
+
+        // 4. El flag en false (por las dudas)
+        modelo.put("abrirModal", false);
+
+        return new ModelAndView("lista-productos", modelo);
     }
 
     // 2. Ir al formulario de "Nuevo Producto"
@@ -69,60 +69,61 @@ public class ControladorProducto {
     }
 
     // guardad producto
-@RequestMapping(path = "/guardar-producto", method = RequestMethod.POST)
-public ModelAndView guardarProducto(@ModelAttribute("producto") Producto producto,
-                                    @RequestParam("idCategoria") Long idCategoria,
-                                    @RequestParam( value = "archivoImagen", required = false) MultipartFile archivo,
-                                    HttpServletRequest request) {
-    ModelMap modelo = new ModelMap();
+    @RequestMapping(path = "/guardar-producto", method = RequestMethod.POST)
+    public ModelAndView guardarProducto(@ModelAttribute("producto") Producto producto,
+            @RequestParam("idCategoria") Long idCategoria,
+            @RequestParam(value = "archivoImagen", required = false) MultipartFile archivo,
+            HttpServletRequest request) {
+        ModelMap modelo = new ModelMap();
 
-    try {
-        CategoriaProducto categoriaReal = servicioProducto.buscarCategoriaPorId(idCategoria);
-        producto.setCategoria(categoriaReal);
+        try {
+            CategoriaProducto categoriaReal = servicioProducto.buscarCategoriaPorId(idCategoria);
+            producto.setCategoria(categoriaReal);
 
-        // 2. Lógica de la Imagen
-        if (archivo != null && !archivo.isEmpty()) {
-            // Definimos la carpeta donde se guardarán las fotos (asegúrate de que exista en src/main/webapp/resources/core/img)
-            String rutaRelativa = "/resources/core/img/";
-            String rutaAbsoluta = request.getServletContext().getRealPath(rutaRelativa);
-            
-            // Creamos un nombre único para evitar que se pisen (ej: 12345_alfajor.jpg)
-            String nombreArchivo = System.currentTimeMillis() + "_" + archivo.getOriginalFilename();
-            
-            try {
-                File destino = new File(rutaAbsoluta + File.separator + nombreArchivo);
-                archivo.transferTo(destino);
-                
-                // Guardamos solo el nombre del archivo en el objeto Producto
-                producto.setImagen(nombreArchivo);
-            } catch (IOException e) {
-                e.printStackTrace();
-                // Opcional: podrías agregar un mensaje de error al modelo si falla la subida
+            // 2. Lógica de la Imagen
+            if (archivo != null && !archivo.isEmpty()) {
+                // Definimos la carpeta donde se guardarán las fotos (asegúrate de que exista en
+                // src/main/webapp/resources/core/img)
+                String rutaRelativa = "/resources/core/img/";
+                String rutaAbsoluta = request.getServletContext().getRealPath(rutaRelativa);
+
+                // Creamos un nombre único para evitar que se pisen (ej: 12345_alfajor.jpg)
+                String nombreArchivo = System.currentTimeMillis() + "_" + archivo.getOriginalFilename();
+
+                try {
+                    File destino = new File(rutaAbsoluta + File.separator + nombreArchivo);
+                    archivo.transferTo(destino);
+
+                    // Guardamos solo el nombre del archivo en el objeto Producto
+                    producto.setImagen(nombreArchivo);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    // Opcional: podrías agregar un mensaje de error al modelo si falla la subida
+                }
+            } else if (producto.getId() != null) {
+                // SI ES EDICIÓN y no subió foto nueva, mantenemos la que ya tenía
+                Producto productoActual = servicioProducto.buscarProductoPorId(producto.getId());
+                producto.setImagen(productoActual.getImagen());
             }
-        } else if (producto.getId() != null) {
-            // SI ES EDICIÓN y no subió foto nueva, mantenemos la que ya tenía
-            Producto productoActual = servicioProducto.buscarProductoPorId(producto.getId());
-            producto.setImagen(productoActual.getImagen());
-        }
 
-        // LÓGICA DE DECISIÓN
-        if (producto.getId() == null) {
-            // Es un producto nuevo
-            servicioProducto.agregarNuevoProducto(producto);
-        } else {
-            // Es un producto que ya existe (Edición)
-            servicioProducto.modificarProducto(producto); // Necesitas este método en tu servicio
-        }
-        
-        return new ModelAndView("redirect:/productos");
+            // LÓGICA DE DECISIÓN
+            if (producto.getId() == null) {
+                // Es un producto nuevo
+                servicioProducto.agregarNuevoProducto(producto);
+            } else {
+                // Es un producto que ya existe (Edición)
+                servicioProducto.modificarProducto(producto); // Necesitas este método en tu servicio
+            }
 
-    } catch (ProductoExistente e) {
-        modelo.put("error", "El SKU ya existe en el sistema.");
-        modelo.put("categorias", servicioProducto.listarCategorias());
-        // Importante: si falla, volvemos a mostrar el formulario/modal
-        return new ModelAndView("formulario-producto", modelo); 
+            return new ModelAndView("redirect:/productos");
+
+        } catch (ProductoExistente e) {
+            modelo.put("error", "El SKU ya existe en el sistema.");
+            modelo.put("categorias", servicioProducto.listarCategorias());
+            // Importante: si falla, volvemos a mostrar el formulario/modal
+            return new ModelAndView("formulario-producto", modelo);
+        }
     }
-}
 
     @RequestMapping(path = "/obtener-producto/{id}", method = RequestMethod.GET)
     @ResponseBody // Esto hace que devuelva los datos (JSON) y no una vista HTML
@@ -158,6 +159,14 @@ public ModelAndView guardarProducto(@ModelAttribute("producto") Producto product
         modelo.put("abrirModal", true);
 
         return new ModelAndView("lista-productos", modelo);
+    }
+
+    @RequestMapping(path = "/eliminar-producto/{id}", method = RequestMethod.GET)
+    public ModelAndView eliminarProducto(@PathVariable("id") Long id) {
+
+        servicioProducto.eliminarProducto(id);
+        return new ModelAndView("redirect:/productos");
+
     }
 
 }

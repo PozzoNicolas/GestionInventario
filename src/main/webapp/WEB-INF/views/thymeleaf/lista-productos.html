@@ -32,6 +32,8 @@
                 <th>Stock</th>
                 <th>Categoria</th>
                 <th>Acciones</th>
+                <th>Editar Producto</th>
+                <th>Eliminar Producto</th>
             </tr>
         </thead>
         <tbody>
@@ -77,6 +79,36 @@
                 <td>
                     <a th:href="@{/preparar-edicion/{id}(id=${p.id})}" class="btn btn-warning">Editar</a>
                 </td>
+                <td>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                        th:data-bs-target="'#modalEliminar' + ${p.id}">
+                        <i class="bi bi-trash"></i> Eliminar
+                    </button>
+
+                    <div class="modal fade" th:id="'modalEliminar' + ${p.id}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header bg-danger text-white">
+                                    <h5 class="modal-title">Confirmar eliminación</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>¿Estás seguro de que querés eliminar el producto
+                                        <strong>[[${p.nombre}]]</strong>?</p>
+                                    <p class="text-muted small">Esta acción no se puede deshacer.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancelar</button>
+                                    <a th:href="@{/eliminar-producto/{id}(id=${p.id})}" class="btn btn-danger">Eliminar
+                                        definitivamente</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+
             </tr>
         </tbody>
     </table>

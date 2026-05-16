@@ -13,8 +13,6 @@ Aplicación web Backend modular desarrollada bajo la arquitectura MVC (Modelo-Vi
 ### 📸 Visualizar Imagen
 ![Imagen del Producto](inventarioImgProd.png)
 
-*(Nota: Asegurate de que el nombre del archivo de la imagen coincida con el que subas a tu repositorio)*
-
 ## Funcionalidades Clave
 - **CRUD Completo:** Alta, baja, modificación y consulta de productos comerciales de manera dinámica.
 - **Filtrado Avanzado:** Búsqueda y filtrado de productos por categoría optimizado directamente desde el backend.

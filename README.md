@@ -4,13 +4,13 @@ Aplicación web Backend modular desarrollada bajo la arquitectura MVC (Modelo-Vi
 
 ## 📸 Capturas de Pantalla 📸
 
-### 📸 Agregar nuevo Producto
+### Agregar nuevo Producto
 ![Agregar nuevo Producto](inventarioProdNuevo.png)
-### 📸 Lista de Productos existentes
+### Lista de Productos existentes
 ![Lista de Productos](inventarioListaProd.png)
-### 📸 Editar un Producto
+### Editar un Producto
 ![Editar Producto](inventarioEditarProd.png)
-### 📸 Visualizar Imagen
+### Visualizar Imagen
 ![Imagen del Producto](inventarioImgProd.png)
 
 ## Funcionalidades Clave
